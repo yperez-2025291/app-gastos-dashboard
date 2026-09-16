@@ -24,30 +24,31 @@ enum AppliesTo {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
+  id            String        @id @default(uuid())
+  email         String        @unique
   password      String
   name          String
-  role          Role           @default(USER)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  role          Role          @default(USER)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   categories    Category[]
   expenses      Expense[]
   budgets       Budget[]
   taxDeductions TaxDeduction[]
+  emergencyFund EmergencyFund?
 
   @@map("users")
 }
 
 model Category {
-  id             String         @id @default(uuid())
-  name           String
-  userId         String
-  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expenses       Expense[]
+  id              String           @id @default(uuid())
+  name            String
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expenses        Expense[]
   categoryBudgets CategoryBudget[]
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
   @@unique([name, userId])
   @@map("categories")
@@ -112,4 +113,18 @@ model CategoryBudget {
 
   @@unique([budgetId, categoryId])
   @@map("category_budgets")
+}
+
+model EmergencyFund {
+  id              String   @id @default(uuid())
+  monthlyExpenses Float    @default(0)
+  targetMonths    Int      @default(3)
+  targetAmount    Float    @default(0)
+  currentAmount   Float    @default(0)
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("emergency_funds")
 }

@@ -1,0 +1,73 @@
+<div class="emergency-container">
+  <div class="header-section">
+    <h1>Presupuesto de Emergencia</h1>
+    <p>Calcula tu fondo de reserva y dale seguimiento a tus ahorros.</p>
+  </div>
+
+  <div class="progress-card">
+    <div class="progress-info">
+      <div>
+        <span class="card-label">Ahorrado Actual</span>
+        <h2 class="amount current">{{ currentAmount | currency:'USD':'symbol':'1.2-2' }}</h2>
+      </div>
+      <div class="text-right">
+        <span class="card-label">Meta Recomendada</span>
+        <h2 class="amount target">{{ targetAmount | currency:'USD':'symbol':'1.2-2' }}</h2>
+      </div>
+    </div>
+
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" [style.width.%]="progressPercentage"></div>
+    </div>
+    <span class="progress-text">{{ progressPercentage }}% completado</span>
+  </div>
+
+  <div class="content-grid">
+    <form [formGroup]="fundForm" (ngSubmit)="calculateTarget()" class="card-box">
+      <h2>Configurar Meta</h2>
+
+      <div class="form-group">
+        <label for="monthlyExpenses">Gasto Promedio Mensual</label>
+        <input
+          id="monthlyExpenses"
+          type="number"
+          step="0.01"
+          formControlName="monthlyExpenses"
+          placeholder="Ej. 1200"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="targetMonths">Meses de Cobertura</label>
+        <select id="targetMonths" formControlName="targetMonths">
+          <option [value]="3">3 meses (Básico)</option>
+          <option [value]="6">6 meses (Recomendado)</option>
+          <option [value]="12">12 meses (Alta seguridad)</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="fundForm.invalid">
+        Calcular Meta
+      </button>
+    </form>
+
+    <form [formGroup]="depositForm" (ngSubmit)="addDeposit()" class="card-box">
+      <h2>Añadir Ahorro</h2>
+
+      <div class="form-group">
+        <label for="amount">Monto a depositar</label>
+        <input
+          id="amount"
+          type="number"
+          step="0.01"
+          formControlName="amount"
+          placeholder="0.00"
+        />
+      </div>
+
+      <button type="submit" class="btn-success" [disabled]="depositForm.invalid">
+        Añadir al Fondo
+      </button>
+    </form>
+  </div>
+</div>

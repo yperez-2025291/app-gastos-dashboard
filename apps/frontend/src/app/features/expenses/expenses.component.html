@@ -1,0 +1,107 @@
+<div class="expenses-container">
+  <div class="header-section">
+    <h1>Mis Gastos</h1>
+    <p>Registra y gestiona tus egresos de forma rápida.</p>
+  </div>
+
+  <div class="summary-card">
+    <span class="summary-label">Total Gastado</span>
+    <span class="summary-amount">{{ totalAmount | currency:'USD':'symbol':'1.2-2' }}</span>
+  </div>
+
+  <div class="content-grid">
+    <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="expense-form-card">
+      <h2>Nuevo Gasto</h2>
+
+      <div class="form-group">
+        <label for="title">Título / Nombre</label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          placeholder="Ej. Supermercado, Gasolina"
+        />
+        <span
+          class="error-text"
+          *ngIf="expenseForm.get('title')?.touched && expenseForm.get('title')?.invalid"
+        >
+          El título es obligatorio (mínimo 3 caracteres).
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="amount">Monto</label>
+        <input
+          id="amount"
+          type="number"
+          step="0.01"
+          formControlName="amount"
+          placeholder="0.00"
+        />
+        <span
+          class="error-text"
+          *ngIf="expenseForm.get('amount')?.touched && expenseForm.get('amount')?.invalid"
+        >
+          Ingresa un monto mayor a 0.
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Descripción (Opcional)</label>
+        <input
+          id="description"
+          type="text"
+          formControlName="description"
+          placeholder="Detalles adicionales..."
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="date">Fecha</label>
+        <input id="date" type="date" formControlName="date" />
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="expenseForm.invalid">
+        Guardar Gasto
+      </button>
+    </form>
+
+    <div class="expense-list-card">
+      <h2>Historial de Gastos</h2>
+
+      <div *ngIf="loading" class="empty-state">
+        Cargando información...
+      </div>
+
+      <div *ngIf="!loading && expenses.length === 0" class="empty-state">
+        No hay gastos registrados.
+      </div>
+
+      <table *ngIf="!loading && expenses.length > 0" class="expenses-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Título</th>
+            <th>Monto</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let expense of expenses">
+            <td>{{ expense.date | date:'dd/MM/yyyy' }}</td>
+            <td class="font-medium">
+              {{ expense.title }}
+              <small *ngIf="expense.description" class="sub-text">{{ expense.description }}</small>
+            </td>
+            <td class="amount-text">{{ expense.amount | currency:'USD':'symbol':'1.2-2' }}</td>
+            <td>
+              <button (click)="deleteExpense(expense.id)" class="btn-delete">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

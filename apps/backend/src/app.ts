@@ -2,7 +2,9 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import { prisma } from './database/prisma.service.js';
 import usersRoutes from './modules/users/users.router.js';
-import budgetRoutes from './modules/budget/budget.router.js'; // Importar rutas de budget
+import budgetRoutes from './modules/budget/budget.router.js';
+import expensesRoutes from './modules/expenses/expenses.routes.js';
+import emergencyFundRoutes from './modules/emergency-fund/emergency-fund.router.js';
 
 const app: Application = express();
 
@@ -29,6 +31,8 @@ app.get('/api/health', async (_req: Request, res: Response) => {
 
 // Rutas de Módulos
 app.use('/api/users', usersRoutes);
-app.use('/api/budget', budgetRoutes); // Registrar ruta /api/budget
+app.use('/api/budget', budgetRoutes);
+app.use('/api/expenses', expensesRoutes);
+app.use('/api/emergency-fund', emergencyFundRoutes);
 
 export default app;
